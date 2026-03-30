@@ -1,0 +1,89 @@
+<!doctype html>
+<html lang="pl">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width,initial-scale=1">
+  <title>Głosowanie</title>
+  <link rel="stylesheet" href="/static/style.css">
+</head>
+<body class="public-page">
+  <div class="page-wrap">
+    <header class="topbar">
+      <div class="brand">
+        <img src="/static/logo.png" alt="Logo">
+        <div>
+          <h1>System głosowania</h1>
+          <p>Wpisz kod sesji i odpowiedz na pytania</p>
+        </div>
+      </div>
+    </header>
+
+    <main class="card large-card">
+      <section id="join-screen" class="screen active">
+        <h2>Rozpoczęcie głosowania</h2>
+        <p class="muted">
+          Wpisz kod sesji. Po zakończeniu głosowania urządzenie zostanie zablokowane
+          do czasu odblokowania przez obsługę.
+        </p>
+
+        <label for="session-code">Kod sesji</label>
+        <input id="session-code" type="text" maxlength="16" placeholder="Np. A1B2">
+
+        <button id="start-btn" class="primary-btn">Rozpocznij</button>
+        <p id="join-message" class="message"></p>
+      </section>
+
+      <section id="blocked-screen" class="screen">
+        <h2>Urządzenie zablokowane</h2>
+        <p class="muted">
+          Na tym urządzeniu oddano już głos w tej sesji. Aby rozpocząć kolejne głosowanie,
+          obsługa musi wpisać hasło odblokowujące.
+        </p>
+
+        <label for="unlock-password">Hasło obsługi</label>
+        <input id="unlock-password" type="password" placeholder="Wpisz hasło obsługi">
+
+        <button id="unlock-btn" class="primary-btn">Odblokuj urządzenie</button>
+        <button id="back-to-code-btn" class="secondary-btn">Wróć</button>
+        <p id="unlock-message" class="message"></p>
+      </section>
+
+      <section id="quiz-screen" class="screen">
+        <div class="quiz-header">
+          <div>
+            <p class="eyebrow">Sesja <span id="current-session-code">-</span></p>
+            <h2 id="question-title">Pytanie</h2>
+          </div>
+          <div class="progress-box">
+            <span id="progress-text">1 / 10</span>
+          </div>
+        </div>
+
+        <div class="progress-bar">
+          <div id="progress-fill"></div>
+        </div>
+
+        <div id="options-container" class="options-list"></div>
+
+        <div class="actions-row">
+          <button id="prev-btn" class="secondary-btn">Wstecz</button>
+          <button id="next-btn" class="primary-btn" disabled>Dalej</button>
+        </div>
+
+        <p id="quiz-message" class="message"></p>
+      </section>
+
+      <section id="success-screen" class="screen">
+        <div class="success-box">
+          <h2>Pomyślnie zagłosowano</h2>
+          <p>Dziękujemy. Głos został zapisany poprawnie.</p>
+          <p id="success-time" class="muted"></p>
+          <button id="to-blocked-btn" class="primary-btn">Zakończ</button>
+        </div>
+      </section>
+    </main>
+  </div>
+
+  <script src="/static/app.js"></script>
+</body>
+</html>

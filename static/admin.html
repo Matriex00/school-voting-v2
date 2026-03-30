@@ -1,0 +1,66 @@
+<!doctype html>
+<html lang="pl">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width,initial-scale=1">
+  <title>Panel administratora</title>
+  <link rel="stylesheet" href="/static/style.css">
+</head>
+<body class="admin-page">
+  <div class="page-wrap">
+    <header class="topbar">
+      <div class="brand">
+        <img src="/static/logo.png" alt="Logo">
+        <div>
+          <h1>Panel administratora</h1>
+          <p>Zarządzanie sesjami i raportami</p>
+        </div>
+      </div>
+    </header>
+
+    <main class="admin-grid">
+      <section class="card">
+        <h2>Otwórz nową sesję</h2>
+        <label for="teacher-key">Klucz nauczyciela</label>
+        <input id="teacher-key" type="password" placeholder="Wpisz klucz nauczyciela">
+
+        <label for="class-name">Nazwa klasy</label>
+        <input id="class-name" type="text" placeholder="Np. 3A">
+
+        <button id="open-session-btn" class="primary-btn">Otwórz sesję</button>
+        <p id="open-session-message" class="message"></p>
+      </section>
+
+      <section class="card">
+        <h2>Zamknij sesję i pobierz raport PDF</h2>
+        <label for="close-session-code">Kod sesji</label>
+        <input id="close-session-code" type="text" placeholder="Np. A1B2">
+
+        <button id="close-session-btn" class="primary-btn">Zamknij i pobierz PDF</button>
+        <p id="close-session-message" class="message"></p>
+      </section>
+
+      <section class="card">
+        <h2>Pokaż wyniki sesji</h2>
+        <label for="results-session-code">Kod sesji</label>
+        <input id="results-session-code" type="text" placeholder="Np. A1B2">
+
+        <button id="show-results-btn" class="primary-btn">Pobierz wyniki</button>
+        <p id="results-message" class="message"></p>
+        <pre id="results-output" class="code-box"></pre>
+      </section>
+
+      <section class="card">
+        <h2>Raport zbiorczy PDF</h2>
+        <label for="summary-codes">Kody sesji oddzielone przecinkami</label>
+        <input id="summary-codes" type="text" placeholder="Np. A1B2, C3D4">
+
+        <button id="summary-report-btn" class="primary-btn">Pobierz raport zbiorczy</button>
+        <p id="summary-message" class="message"></p>
+      </section>
+    </main>
+  </div>
+
+  <script src="/static/admin.js"></script>
+</body>
+</html>
