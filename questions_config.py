@@ -1,142 +1,82 @@
 QUESTIONS = [
     {
-        "question": "1. Który z poniższych elementów jest urządzeniem wejściowym komputera?",
-        "options": [
-            "Monitor",
-            "Drukarka",
-            "Klawiatura",
-            "Głośnik",
-            "Projektor",
-            "Zasilacz",
-            "Router",
-            "Dysk SSD"
-        ],
-        "correct_option_index": 2
+        "category_title": "Król/Królowa Tekstów",
+        "category_description": "Nauczyciel, który zawsze znajdzie idealne słowa: od błyskotliwych komentarzy po niezapomniane powiedzonka. Wpisz cytat nauczyciela w polu tekstowym, a następnie wybierz osobę z listy.",
+        "question": "1. Na kogo oddajesz swój głos?",
+        "type": "mixed",
+        "options": ["Kujawski Krzysztof", "Cieśliński Marcin", "Kegel Zbigniew", "Zawadzki Jarosław", "Swoboda Magdalena", "Berlińska Dominika", "Kulesza Beata", "Małecka Sylwia", "Szulerowicz Magdalena"],
+        "correct_option_index": None
     },
     {
-        "question": "2. Który program służy głównie do tworzenia dokumentów tekstowych?",
-        "options": [
-            "Microsoft Word",
-            "Paint",
-            "VLC",
-            "Notepad++",
-            "Discord",
-            "Steam",
-            "OBS Studio",
-            "Spotify"
-        ],
-        "correct_option_index": 0
+        "category_title": "Najlepszy z najlepszych",
+        "category_description": "Nagroda dla nauczyciela, który wyróżnia się na tle wszystkich i jest prawdziwą legendą szkoły.",
+        "question": "2. Na kogo oddajesz swój głos? Wpisz imię i nazwisko nauczyciela",
+        "type": "open",
+        "options": [],
+        "correct_option_index": None
     },
     {
-        "question": "3. Który skrót klawiszowy najczęściej służy do kopiowania?",
-        "options": [
-            "Ctrl + Z",
-            "Ctrl + S",
-            "Ctrl + C",
-            "Ctrl + V",
-            "Ctrl + X",
-            "Ctrl + P",
-            "Ctrl + A",
-            "Ctrl + D"
-        ],
-        "correct_option_index": 2
+        "category_title": "Pogromca hałasu",
+        "category_description": "Osoba, która jednym spojrzeniem lub gestem potrafi zamienić najgłośniejszą klasę w oazę ciszy.",
+        "question": "3. Na kogo oddajesz swój głos?",
+        "type": "choice",
+        "options": ["Jasik Dominika", "Kulesza Beata", "Małecka Sylwia", "Cieśliński Marcin", "Gill-Góralczyk Agnieszka", "Kegel Zbigniew", "Kujawski Krzysztof", "Waszak Karolina"],
+        "correct_option_index": None
     },
     {
-        "question": "4. Co oznacza skrót PDF?",
-        "options": [
-            "Portable Document Format",
-            "Private Document File",
-            "Personal Data Folder",
-            "Program Document Form",
-            "Public Download Format",
-            "Printable Data File",
-            "Photo Document Frame",
-            "Primary Document Format"
-        ],
-        "correct_option_index": 0
+        "category_title": "Bratnia dusza",
+        "category_description": "Nauczyciel, do którego uczniowie chętnie przychodzą po rozmowę, wsparcie i dobre rady.",
+        "question": "4. Na kogo oddajesz swój głos?",
+        "type": "choice",
+        "options": ["Szeska Agata", "Orłowska Barbara", "Szulerowicz Magdalena", "Jasik Dominika", "Walczak Agnieszka", "Zandecka Karolina", "Grela Jagoda", "Otuszewski Przemysław"],
+        "correct_option_index": None
     },
     {
-        "question": "5. Który z tych systemów jest systemem operacyjnym?",
-        "options": [
-            "Intel",
-            "Windows",
-            "NVIDIA",
-            "HDMI",
-            "USB",
-            "Bluetooth",
-            "SSD",
-            "RAM"
-        ],
-        "correct_option_index": 1
+        "category_title": "Mistrz prezentacji ",
+        "category_description": "Ekspert od prowadzenia lekcji w tak ciekawy i angażujący sposób, że trudno oderwać wzrok od tablicy lub ekranu.",
+        "question": "5. Na kogo oddajesz swój głos?",
+        "type": "choice",
+        "options": ["Jasik Dominika", "Gospodarek Paulina", "Orłowska Beata", "Sassek Marianna", "Zandecka Karolina", "Grela Jagoda", "Sawuła Agnieszka"],
+        "correct_option_index": None
     },
     {
-        "question": "6. Który element odpowiada za przechowywanie plików na komputerze?",
-        "options": [
-            "Karta graficzna",
-            "Procesor",
-            "Pamięć RAM",
-            "Dysk twardy / SSD",
-            "Płyta główna",
-            "Zasilacz",
-            "Wentylator",
-            "Mysz"
-        ],
-        "correct_option_index": 3
+        "category_title": "Ekonauczyciel",
+        "category_description": "Promotor ekologii i dobrych nawyków, który inspiruje innych do dbania o środowisko każdego dnia.",
+        "question": "6. Na kogo oddajesz swój głos?",
+        "type": "choice",
+        "options": ["Jasik Dominika", "Kujawski Krzysztof", "Waszak Karolina", "Berlińska Dominika", "Szeska Agata"],
+        "correct_option_index": None
     },
     {
-        "question": "7. Który program najczęściej służy do przeglądania internetu?",
-        "options": [
-            "Excel",
-            "Chrome",
-            "Word",
-            "Paint",
-            "PowerPoint",
-            "Photoshop",
-            "Blender",
-            "Teams"
-        ],
-        "correct_option_index": 1
+        "category_title": "Zamknięta księga",
+        "category_description": "Tajemniczy nauczyciel, którego myśli, humor i plany lekcji trudno rozszyfrować.",
+        "question": "7. Na kogo oddajesz swój głos?",
+        "type": "choice",
+        "options": ["Jasik Dominika", "Sawuła Agnieszka", "Kulesza Beata", "Małecka Sylwia", "Walczak Agnieszka"],
+        "correct_option_index": None
     },
     {
-        "question": "8. Co oznacza, że strona internetowa jest zabezpieczona protokołem HTTPS?",
-        "options": [
-            "Nie można jej otworzyć na telefonie",
-            "Działa tylko w szkole",
-            "Połączenie jest szyfrowane",
-            "Strona nie ma obrazków",
-            "Strona działa wyłącznie offline",
-            "Można ją otworzyć tylko w nocy",
-            "Nie wymaga internetu",
-            "Jest tylko dla administratora"
-        ],
-        "correct_option_index": 2
+        "category_title": "Strażnik dotlenienia",
+        "category_description": "Nauczyciel, który dba o to, by uczniowie aktywnie spędzali przerwy i regularnie wychodzili na świeże powietrze.",
+        "question": "8. Na kogo oddajesz swój głos?",
+        "type": "choice",
+        "options": ["Kulasza Beata", "Gill-Góralczyk", "Małecka Sylwia", "Jasik Dominika", "Walczak Agnieszka", "Jankowska Joanna", "Szulerowicz Magdalena", "Waszak Karolina"],
+        "correct_option_index": None
     },
     {
-        "question": "9. Która z poniższych opcji jest przykładem pamięci operacyjnej?",
-        "options": [
-            "SSD",
-            "Pendrive",
-            "RAM",
-            "Płyta DVD",
-            "Karta SD",
-            "BIOS",
-            "Procesor",
-            "Router"
-        ],
-        "correct_option_index": 2
+        "category_title": "Młodzieżowy nauczyciel roku",
+        "category_description": "Nauczyciel, który świetnie rozumie młodzież, ich język, trendy i codzienne sprawy.",
+        "question": "9. Na kogo oddajesz swój głos?",
+        "type": "choice",
+        "options": ["Szulerowicz Magdalena", "Waszak Karolina", "Zandecka Karolina", "Jasik Dominika", "Kujawski Krzysztof", "Grela Jagoda", "Jankowska Joanna", "Otuszewski Przemysław"],
+        "correct_option_index": None
     },
     {
-        "question": "10. Która czynność pomaga zadbać o bezpieczeństwo konta?",
-        "options": [
-            "Ustawienie prostego hasła 1234",
-            "Udostępnianie hasła kolegom",
-            "Wyłączanie ekranu",
-            "Stosowanie silnego hasła",
-            "Zapisywanie hasła na ławce",
-            "Logowanie się wszędzie tym samym hasłem bez zmian",
-            "Wyłączanie antywirusa",
-            "Korzystanie tylko z jednej litery w haśle"
-        ],
-        "correct_option_index": 3
-    }
+        "category_title": "Debiut roku",
+        "category_description": "Wyróżnienie dla nauczyciela, który mimo krótkiego stażu już zdążył zrobić świetne wrażenie.",
+        "question": "10. Na kogo oddajesz swój głos?",
+        "type": "choice",
+        "options": ["Ewa Bytowska", "Katarzyna Misiejko", "Marianna Sassek", "Agnieszka Sawuła", "Aleksandra Szukalska"],
+        "correct_option_index": None
+    },
 ]

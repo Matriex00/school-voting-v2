@@ -21,28 +21,18 @@
     <main class="card large-card">
       <section id="join-screen" class="screen active">
         <h2>Rozpoczęcie głosowania</h2>
-        <p class="muted">
-          Wpisz kod sesji. Po zakończeniu głosowania urządzenie zostanie zablokowane
-          do czasu odblokowania przez obsługę.
-        </p>
-
+        <p class="muted">Wpisz kod sesji, aby rozpocząć.</p>
         <label for="session-code">Kod sesji</label>
         <input id="session-code" type="text" maxlength="16" placeholder="Np. A1B2">
-
         <button id="start-btn" class="primary-btn">Rozpocznij</button>
         <p id="join-message" class="message"></p>
       </section>
 
       <section id="blocked-screen" class="screen">
         <h2>Urządzenie zablokowane</h2>
-        <p class="muted">
-          Na tym urządzeniu oddano już głos w tej sesji. Aby rozpocząć kolejne głosowanie,
-          obsługa musi wpisać hasło odblokowujące.
-        </p>
-
+        <p class="muted">To urządzenie oddało już głos. Obsługa musi wpisać hasło odblokowujące.</p>
         <label for="unlock-password">Hasło obsługi</label>
-        <input id="unlock-password" type="password" placeholder="Wpisz hasło obsługi">
-
+        <input id="unlock-password" type="password" placeholder="Wpisz hasło">
         <button id="unlock-btn" class="primary-btn">Odblokuj urządzenie</button>
         <button id="back-to-code-btn" class="secondary-btn">Wróć</button>
         <p id="unlock-message" class="message"></p>
@@ -52,24 +42,18 @@
         <div class="quiz-header">
           <div>
             <p class="eyebrow">Sesja <span id="current-session-code">-</span></p>
-            <h2 id="question-title">Pytanie</h2>
+            <h2 id="question-category" style="margin-bottom: 4px;">Kategoria</h2>
+            <p id="category-description" class="muted" style="margin-bottom: 15px; font-size: 0.9em;"></p>
+            <h3 id="question-title">Pytanie</h3>
           </div>
-          <div class="progress-box">
-            <span id="progress-text">1 / 10</span>
-          </div>
+          <div class="progress-box"><span id="progress-text">1 / 10</span></div>
         </div>
-
-        <div class="progress-bar">
-          <div id="progress-fill"></div>
-        </div>
-
-        <div id="options-container" class="options-list"></div>
-
+        <div class="progress-bar"><div id="progress-fill"></div></div>
+        <div id="options-container"></div>
         <div class="actions-row">
           <button id="prev-btn" class="secondary-btn">Wstecz</button>
           <button id="next-btn" class="primary-btn" disabled>Dalej</button>
         </div>
-
         <p id="quiz-message" class="message"></p>
       </section>
 
@@ -83,7 +67,6 @@
       </section>
     </main>
   </div>
-
   <script src="/static/app.js"></script>
 </body>
 </html>

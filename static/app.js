@@ -1,5 +1,3 @@
-const QUESTIONS_COUNT = 10;
-
 const screens = {
   join: document.getElementById("join-screen"),
   blocked: document.getElementById("blocked-screen"),
@@ -10,13 +8,14 @@ const screens = {
 const sessionCodeInput = document.getElementById("session-code");
 const joinMessage = document.getElementById("join-message");
 const startBtn = document.getElementById("start-btn");
-
 const unlockPasswordInput = document.getElementById("unlock-password");
 const unlockBtn = document.getElementById("unlock-btn");
 const backToCodeBtn = document.getElementById("back-to-code-btn");
 const unlockMessage = document.getElementById("unlock-message");
 
 const currentSessionCodeLabel = document.getElementById("current-session-code");
+const questionCategory = document.getElementById("question-category");
+const categoryDescription = document.getElementById("category-description");
 const questionTitle = document.getElementById("question-title");
 const progressText = document.getElementById("progress-text");
 const progressFill = document.getElementById("progress-fill");
@@ -24,15 +23,11 @@ const optionsContainer = document.getElementById("options-container");
 const prevBtn = document.getElementById("prev-btn");
 const nextBtn = document.getElementById("next-btn");
 const quizMessage = document.getElementById("quiz-message");
-
 const successTime = document.getElementById("success-time");
 const toBlockedBtn = document.getElementById("to-blocked-btn");
 
-let deviceId = localStorage.getItem("device_id");
-if (!deviceId) {
-  deviceId = `device-${Math.random().toString(36).slice(2, 10)}-${Date.now()}`;
-  localStorage.setItem("device_id", deviceId);
-}
+let deviceId = localStorage.getItem("device_id") || `device-${Math.random().toString(36).slice(2, 10)}-${Date.now()}`;
+localStorage.setItem("device_id", deviceId);
 
 let activeSessionCode = "";
 let questions = [];
@@ -46,248 +41,147 @@ function showScreen(name) {
 
 function setMessage(el, text, type = "") {
   el.textContent = text || "";
-  el.className = "message";
-  if (type) {
-    el.classList.add(type);
-  }
-}
-
-function resetQuizState() {
-  questions = [];
-  answers = [];
-  currentQuestionIndex = 0;
-  optionsContainer.innerHTML = "";
-  nextBtn.disabled = true;
-  setMessage(quizMessage, "");
+  el.className = "message " + type;
 }
 
 function renderQuestion() {
   const item = questions[currentQuestionIndex];
   if (!item) return;
 
+  const qType = item.type || "choice";
+  const ans = answers[currentQuestionIndex];
+
   currentSessionCodeLabel.textContent = activeSessionCode;
+  questionCategory.textContent = item.category_title || "Pytanie";
+  categoryDescription.textContent = item.category_description || "";
   questionTitle.textContent = item.question;
   progressText.textContent = `${currentQuestionIndex + 1} / ${questions.length}`;
   progressFill.style.width = `${((currentQuestionIndex + 1) / questions.length) * 100}%`;
 
   optionsContainer.innerHTML = "";
 
-  item.options.forEach((optionText, optionIndex) => {
-    const button = document.createElement("button");
-    button.type = "button";
-    button.className = "option-btn";
-    button.textContent = optionText;
+  // 1. Pole tekstowe dla 'open' (otwarte) i 'mixed' (mieszane)
+  if (qType === "open" || qType === "mixed") {
+    const inputWrapper = document.createElement("div");
+    inputWrapper.className = "input-group";
+    inputWrapper.style.marginBottom = "25px"; // Dodatkowy odstęp
 
-    if (answers[currentQuestionIndex] === optionIndex) {
-      button.classList.add("selected");
+    const input = document.createElement(qType === "open" ? "textarea" : "input");
+    if (qType === "mixed") {
+      input.type = "text";
+      input.placeholder = "Wpisz tutaj cytat danego nauczyciela..."; // Twoja prośba
+    } else {
+      // Dla pytań otwartych (np. imię i nazwisko)
+      input.className = "text-input open-question-field";
+      input.placeholder = "Wpisz tutaj imię i nazwisko..."; 
+      input.rows = 3;
     }
+    
+    input.className += " custom-styled-input";
+    input.value = ans.custom_text || "";
+    input.oninput = (e) => {
+      answers[currentQuestionIndex].custom_text = e.target.value;
+      validate();
+    };
+    
+    inputWrapper.appendChild(input);
+    optionsContainer.appendChild(inputWrapper);
+  }
 
-    button.addEventListener("click", () => {
-      answers[currentQuestionIndex] = optionIndex;
-      renderQuestion();
+  // 2. Opcje wyboru dla 'choice' i 'mixed'
+  if (qType === "choice" || qType === "mixed") {
+    const list = document.createElement("div");
+    list.className = "options-list";
+    item.options.forEach((opt, idx) => {
+      const btn = document.createElement("button");
+      btn.className = "option-btn" + (ans.selected_option_index === idx ? " selected" : "");
+      btn.textContent = opt;
+      btn.onclick = () => {
+        answers[currentQuestionIndex].selected_option_index = idx;
+        renderQuestion();
+      };
+      list.appendChild(btn);
     });
+    optionsContainer.appendChild(list);
+  }
 
-    optionsContainer.appendChild(button);
-  });
-
-  nextBtn.disabled = typeof answers[currentQuestionIndex] !== "number";
+  validate();
   prevBtn.disabled = currentQuestionIndex === 0;
-  nextBtn.textContent = currentQuestionIndex === questions.length - 1 ? "Zakończ i wyślij" : "Dalej";
+  nextBtn.textContent = currentQuestionIndex === questions.length - 1 ? "Zakończ" : "Dalej";
 }
 
-async function fetchSessionStatus(sessionCode) {
-  const response = await fetch(`/api/session/${encodeURIComponent(sessionCode)}/status`, {
-    method: "POST",
-    headers: {
-      "Content-Type": "application/json"
-    },
-    body: JSON.stringify({
-      device_id: deviceId
-    })
-  });
+function validate() {
+  const item = questions[currentQuestionIndex];
+  const ans = answers[currentQuestionIndex];
+  const type = item.type || "choice";
+  let ok = false;
 
-  return response.json();
-}
+  if (type === "choice") {
+    // Musisz wybrać opcję
+    ok = ans.selected_option_index !== null;
+  } else if (type === "open") {
+    // Pole tekstowe jest teraz ZAWSZE poprawne (nawet puste)
+    ok = true; 
+  } else if (type === "mixed") {
+    // W pytaniu mieszanym musisz wybrać opcję, ale tekst może być pusty
+    ok = ans.selected_option_index !== null;
+  }
 
-async function fetchQuestions(sessionCode) {
-  const response = await fetch(`/api/session/${encodeURIComponent(sessionCode)}/questions`);
-  return response.json();
+  nextBtn.disabled = !ok;
 }
 
 async function startFlow() {
-  const sessionCode = sessionCodeInput.value.trim().toUpperCase();
-  if (!sessionCode) {
-    setMessage(joinMessage, "Wpisz kod sesji.", "error");
-    return;
-  }
-
+  const code = sessionCodeInput.value.trim().toUpperCase();
+  if (!code) return setMessage(joinMessage, "Wpisz kod", "error");
   startBtn.disabled = true;
-  setMessage(joinMessage, "Sprawdzanie sesji...");
 
   try {
-    const statusData = await fetchSessionStatus(sessionCode);
+    const res = await fetch(`/api/session/${code}/status`, {
+      method: "POST",
+      headers: {"Content-Type": "application/json"},
+      body: JSON.stringify({ device_id: deviceId })
+    });
+    const data = await res.json();
+    if (data.error) throw new Error(data.error);
 
-    if (statusData.error) {
-      setMessage(joinMessage, statusData.error, "error");
-      return;
-    }
+    activeSessionCode = code;
+    if (data.device_locked) return showScreen("blocked");
 
-    activeSessionCode = sessionCode;
-
-    if (!statusData.session_open) {
-      setMessage(joinMessage, "Ta sesja jest zamknięta.", "error");
-      return;
-    }
-
-    if (statusData.device_locked) {
-      unlockPasswordInput.value = "";
-      setMessage(unlockMessage, "");
-      showScreen("blocked");
-      return;
-    }
-
-    const questionsData = await fetchQuestions(sessionCode);
-    if (questionsData.error) {
-      setMessage(joinMessage, questionsData.error, "error");
-      return;
-    }
-
-    questions = questionsData.questions || [];
-    answers = new Array(questions.length).fill(null);
+    const qRes = await fetch(`/api/session/${code}/questions`);
+    questions = (await qRes.json()).questions;
+    answers = questions.map(() => ({ selected_option_index: null, custom_text: "" }));
     currentQuestionIndex = 0;
-
-    if (!questions.length) {
-      setMessage(joinMessage, "Brak pytań w sesji.", "error");
-      return;
-    }
-
     renderQuestion();
     showScreen("quiz");
-    setMessage(joinMessage, "");
-  } catch (error) {
-    setMessage(joinMessage, "Błąd połączenia z serwerem.", "error");
-  } finally {
-    startBtn.disabled = false;
-  }
+  } catch (e) { setMessage(joinMessage, e.message, "error"); }
+  finally { startBtn.disabled = false; }
 }
 
-async function unlockDevice() {
-  const password = unlockPasswordInput.value.trim();
-  if (!password) {
-    setMessage(unlockMessage, "Wpisz hasło obsługi.", "error");
-    return;
-  }
-
-  unlockBtn.disabled = true;
-  setMessage(unlockMessage, "Trwa odblokowywanie...");
-
-  try {
-    const response = await fetch("/api/device/unlock", {
-      method: "POST",
-      headers: {
-        "Content-Type": "application/json"
-      },
-      body: JSON.stringify({
-        session_code: activeSessionCode,
-        device_id: deviceId,
-        password
-      })
-    });
-
-    const data = await response.json();
-
-    if (data.error) {
-      setMessage(unlockMessage, data.error, "error");
-      return;
-    }
-
-    setMessage(unlockMessage, "Urządzenie odblokowane.", "success");
-    sessionCodeInput.value = activeSessionCode;
-    await startFlow();
-  } catch (error) {
-    setMessage(unlockMessage, "Błąd połączenia z serwerem.", "error");
-  } finally {
-    unlockBtn.disabled = false;
-  }
-}
-
-async function submitSurvey() {
-  const payload = answers.map((selectedOptionIndex, questionIndex) => ({
-    question_index: questionIndex,
-    selected_option_index: selectedOptionIndex
-  }));
-
+async function submit() {
   nextBtn.disabled = true;
-  prevBtn.disabled = true;
-  setMessage(quizMessage, "Zapisywanie głosu...");
-
   try {
-    const response = await fetch(`/api/session/${encodeURIComponent(activeSessionCode)}/submit-survey`, {
+    const res = await fetch(`/api/session/${activeSessionCode}/submit-survey`, {
       method: "POST",
-      headers: {
-        "Content-Type": "application/json"
-      },
-      body: JSON.stringify({
-        device_id: deviceId,
-        answers: payload
-      })
+      headers: {"Content-Type": "application/json"},
+      body: JSON.stringify({ device_id: deviceId, answers })
     });
-
-    const data = await response.json();
-
-    if (data.error) {
-      setMessage(quizMessage, data.error, "error");
-      renderQuestion();
-      return;
-    }
-
-    successTime.textContent = `Czas zapisu głosu: ${data.submitted_at}`;
-    setMessage(quizMessage, "");
+    const data = await res.json();
+    if (data.error) throw new Error(data.error);
+    successTime.textContent = `Zapisano: ${data.submitted_at}`;
     showScreen("success");
-  } catch (error) {
-    setMessage(quizMessage, "Błąd połączenia z serwerem.", "error");
-    renderQuestion();
-  }
+  } catch (e) { setMessage(quizMessage, e.message, "error"); nextBtn.disabled = false; }
 }
 
-startBtn.addEventListener("click", startFlow);
-
-sessionCodeInput.addEventListener("keydown", (e) => {
-  if (e.key === "Enter") {
-    startFlow();
-  }
-});
-
-unlockBtn.addEventListener("click", unlockDevice);
-
-backToCodeBtn.addEventListener("click", () => {
-  showScreen("join");
-});
-
-prevBtn.addEventListener("click", () => {
-  if (currentQuestionIndex > 0) {
-    currentQuestionIndex -= 1;
-    renderQuestion();
-  }
-});
-
-nextBtn.addEventListener("click", async () => {
-  if (typeof answers[currentQuestionIndex] !== "number") {
-    setMessage(quizMessage, "Wybierz jedną odpowiedź.", "error");
-    return;
-  }
-
-  if (currentQuestionIndex < questions.length - 1) {
-    currentQuestionIndex += 1;
-    renderQuestion();
-    return;
-  }
-
-  await submitSurvey();
-});
-
-toBlockedBtn.addEventListener("click", () => {
-  unlockPasswordInput.value = "";
-  setMessage(unlockMessage, "");
-  showScreen("blocked");
-});
+startBtn.onclick = startFlow;
+nextBtn.onclick = () => currentQuestionIndex < questions.length - 1 ? (currentQuestionIndex++, renderQuestion()) : submit();
+prevBtn.onclick = () => { currentQuestionIndex--; renderQuestion(); };
+toBlockedBtn.onclick = () => showScreen("blocked");
+unlockBtn.onclick = async () => {
+  const res = await fetch("/api/device/unlock", {
+    method: "POST",
+    headers: {"Content-Type": "application/json"},
+    body: JSON.stringify({ session_code: activeSessionCode, device_id: deviceId, password: unlockPasswordInput.value })
+  });
+  if ((await res.json()).ok) startFlow();
+  else setMessage(unlockMessage, "Złe hasło", "error");
+};

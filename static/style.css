@@ -303,3 +303,28 @@ button:disabled {
     width: 100%;
   }
 }
+
+/* Styl dla pól tekstowych */
+.custom-styled-input {
+    width: 100%;
+    padding: 15px;
+    border: 2px solid #e0e0e0;
+    border-radius: 12px;
+    font-size: 1rem;
+    transition: border-color 0.3s, box-shadow 0.3s;
+    outline: none;
+    background-color: #f9f9f9;
+}
+
+.custom-styled-input:focus {
+    border-color: #4a90e2;
+    box-shadow: 0 0 8px rgba(74, 144, 226, 0.2);
+    background-color: #fff;
+}
+
+/* Specyficzne ustawienia dla pola otwartego (imię i nazwisko) */
+.open-question-field {
+    min-height: 80px;
+    font-weight: 500;
+    color: #333;
+}
