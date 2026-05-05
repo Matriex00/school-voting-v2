@@ -281,6 +281,30 @@ def close_session():
     results = serialize_session_results(session_obj)
     pdf = build_session_report_pdf(results)
     return send_file(pdf, mimetype="application/pdf", as_attachment=True, download_name=f"raport_{session_obj.code}.pdf")
-
+@app.route("/api/sessions/summary-report", methods=["GET"])
+def get_summary_report():
+    if not require_teacher(): 
+        return jsonify({"error": "Brak dostępu"}), 403
+    
+    # Pobierz wszystkie sesje z bazy danych
+    all_sessions = VotingSession.query.order_by(VotingSession.start_ts.asc()).all()
+    
+    if not all_sessions:
+        return jsonify({"error": "Brak sesji do wygenerowania raportu"}), 404
+        
+    # Przygotuj dane dla każdej sesji
+    results_list = []
+    for s in all_sessions:
+        results_list.append(serialize_session_results(s))
+        
+    # Wygeneruj PDF zbiorczy korzystając z funkcji w pdf_utils.py
+    pdf = build_summary_report_pdf(results_list)
+    
+    return send_file(
+        pdf, 
+        mimetype="application/pdf", 
+        as_attachment=True, 
+        download_name="raport_zbiorczy.pdf"
+    )
 with app.app_context(): db.create_all()
 if __name__ == "__main__": app.run(host="0.0.0.0", port=5000, debug=True)
