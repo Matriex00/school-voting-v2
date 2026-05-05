@@ -287,17 +287,21 @@ def get_summary_report():
         return jsonify({"error": "Brak dostępu"}), 403
     
     data = request.get_json(silent=True) or {}
-    session_codes = data.get("session_codes", [])
+    # Pobieramy kody i zamieniamy je na wielkie litery, usuwając spacje
+    raw_codes = data.get("session_codes", [])
+    session_codes = [c.strip().upper() for c in raw_codes if c.strip()]
     
     if not session_codes:
-        # Jeśli nie podano kodów, pobierz wszystkie sesje
-        all_sessions = VotingSession.query.order_by(VotingSession.start_ts.asc()).all()
+        # Jeśli nic nie wpisano, weź absolutnie wszystkie sesje z bazy
+        all_sessions = VotingSession.query.all()
     else:
-        # Pobierz tylko sesje o wskazanych kodach
-        all_sessions = VotingSession.query.filter(VotingSession.code.in_(session_codes)).order_by(VotingSession.start_ts.asc()).all()
+        # Szukaj konkretnych kodów
+        all_sessions = VotingSession.query.filter(VotingSession.code.in_(session_codes)).all()
     
     if not all_sessions:
-        return jsonify({"error": "Nie znaleziono sesji o podanych kodach"}), 404
+        # Logujemy w terminalu co serwer widzi, żebyś mógł to sprawdzić
+        print(f"DEBUG: Szukano kodów: {session_codes}")
+        return jsonify({"error": f"Nie znaleziono sesji. Sprawdź kody lub czy plik local.db istnieje."}), 404
         
     results_list = [serialize_session_results(s) for s in all_sessions]
     pdf = build_summary_report_pdf(results_list)
